@@ -1,4 +1,3 @@
-import secrets
 from typing import Annotated
 
 import uvicorn
@@ -12,9 +11,9 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
-
 security = HTTPBasic()
+app = FastAPI(dependencies=[Depends(security)])
+
 
 def get_db():
     db = SessionLocal()
@@ -34,24 +33,33 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 @app.post("/users/{user_id}/notes/", response_model=shemas.Note)
 def create_note_for_user(
-        user_id: int, note: shemas.NoteCreate, db: Session = Depends(get_db)
+    user_id: int, note: shemas.NoteCreate, db: Session = Depends(get_db)
 ):
     return crud.create_user_note(db=db, note=note, user_id=user_id)
+
+
+users = {
+    "admin": {
+        "password": "Password123",
+        "token": "",
+        "priviliged": True
+    }
+}
+
 
 def get_current_username(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
 ):
-    current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = b"stanleyjobson"
-    is_correct_username = secrets.compare_digest(
-        current_username_bytes, correct_username_bytes
-    )
-    current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = b"swordfish"
-    is_correct_password = secrets.compare_digest(
-        current_password_bytes, correct_password_bytes
-    )
-    if not (is_correct_username and is_correct_password):
+    current_username_bytes = credentials.username
+    user = users.get(current_username_bytes)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    if not credentials.password == user['password']:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -59,9 +67,11 @@ def get_current_username(
         )
     return credentials.username
 
-@app.get("/users/me")
+
+@app.get("/user/me")
 def read_current_user(username: Annotated[str, Depends(get_current_username)]):
-    return {"username": credentials.username, "password": credentials.password}
+    return {"username": username}
+
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
