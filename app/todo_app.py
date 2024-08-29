@@ -3,10 +3,9 @@ from typing import Annotated
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends, status
 from sqlalchemy.orm import Session
-import crud
-import models
+from app import models, crud
 import shemas
-from database import engine, SessionLocal
+from app.database import engine, SessionLocal
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 models.Base.metadata.create_all(bind=engine)
