@@ -43,14 +43,14 @@ def get_current_username(
 
 
 @app.get("/notes", response_model=list[shemas.Note])
-def read_user(user_id: Annotated[int, Depends(get_current_username)], db: Session = Depends(get_db)):
+def read_notes(user_id: Annotated[int, Depends(get_current_username)], db: Session = Depends(get_db)):
     db_notes = crud.get_user_notes(db, user_id=user_id)
     if db_notes is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_notes
 
 
-@app.post("user/register", response_model=shemas.User)
+@app.post("/user/register", response_model=shemas.User)
 def create_user(user: shemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
