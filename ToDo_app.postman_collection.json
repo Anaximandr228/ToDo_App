@@ -24,7 +24,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/user/register",
+					"raw": "http://127.0.0.1:8000/user/register",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -71,7 +71,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/note",
+					"raw": "http://127.0.0.1:8000/note",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -108,7 +108,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/notes",
+					"raw": "http://127.0.0.1:8000/notes",
 					"protocol": "http",
 					"host": [
 						"127",
