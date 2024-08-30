@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: "postgres"  #Введите название пользователя базы данных
       POSTGRES_PASSWORD: "rtf558Ur" #Введите пароль пользователя базы данных
     ports:
-      - "5000:8000"
+      - "8000:8000"
     depends_on:
       - postgres
     command: >
