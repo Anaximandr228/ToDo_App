@@ -23,7 +23,7 @@ def get_db():
 
 
 def get_user_id(
-        credentials: Annotated[HTTPBasicCredentials, Depends(security)], db: Session = Depends(get_db)):
+        credentials: Annotated[HTTPBasicCredentials, Depends(security)], db: Session = Depends(get_db)) -> int:
     current_username_bytes = credentials.username
     user = db.query(models.User).filter(models.User.username == current_username_bytes).first()
     if not user:
