@@ -54,7 +54,6 @@ def read_notes(user_id: Annotated[int, Depends(get_user_id)], db: Session = Depe
 def create_user(user: shemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
-
 @app.post("/note", response_model=shemas.Note)
 def create_note_for_user(user_id: Annotated[int, Depends(get_user_id)],
                          note: shemas.NoteCreate, db: Session = Depends(get_db)

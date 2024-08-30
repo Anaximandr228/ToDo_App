@@ -4,7 +4,7 @@ import models
 import shemas
 
 
-def get_user_notes(db: Session, user_id: int) -> models.Note:
+def get_user_notes(db: Session, user_id: int) -> list[models.Note]:
     result = db.query(models.Note).filter(models.Note.owner_id == user_id).all()
     return result
 
@@ -19,7 +19,7 @@ def create_user_note(db: Session, note: shemas.NoteCreate, user_id: int) -> mode
     return db_note
 
 
-def create_user(db: Session, user: shemas.UserCreate):
+def create_user(db: Session, user: shemas.UserCreate) -> models.User:
     db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
