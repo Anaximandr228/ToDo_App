@@ -28,8 +28,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    first_name: int
-    last_name: int
     notes: list[Note] = []
 
     class Config:
